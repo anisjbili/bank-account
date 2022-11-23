@@ -17,6 +17,6 @@ public class Account {
     }
 
     public void withdrawal(Amount amount) {
-        //TODO("Not implemented yet")
+        balance = balance.subtract(amount);
     }
 }

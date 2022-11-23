@@ -3,6 +3,7 @@ package com.kata.bankaccount.bankaccount;
 import com.kata.bankaccount.business.Account;
 import com.kata.bankaccount.business.Amount;
 import com.kata.bankaccount.business.Balance;
+import com.kata.bankaccount.exceptions.InsufficientFundsException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -49,5 +50,15 @@ public class AccountTests {
         account.withdrawal(amount);
         Balance expectedBalance = new Balance(BigDecimal.ZERO);
         Assertions.assertEquals(expectedBalance, account.getBalance());
+    }
+
+    @Test
+    void making_a_withdrawal_of_an_amount_bigger_than_balance_should_be_invalid() {
+        Balance balance = new Balance(BigDecimal.TEN);
+        Account account = new Account(balance);
+        Amount amount = new Amount(BigDecimal.valueOf(20));
+        Assertions.assertThrows(InsufficientFundsException.class, () -> {
+            account.withdrawal(amount);
+        });
     }
 }
