@@ -1,4 +1,4 @@
-package com.kata.bankaccount.bankaccount;
+package com.kata.bankaccount;
 
 import com.kata.bankaccount.business.*;
 import com.kata.bankaccount.exceptions.InsufficientFundsException;
