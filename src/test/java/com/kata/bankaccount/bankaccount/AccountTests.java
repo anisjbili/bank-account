@@ -19,4 +19,25 @@ public class AccountTests {
         Balance expectedBalance = new Balance(BigDecimal.TEN);
         Assertions.assertEquals(expectedBalance, account.getBalance());
     }
+
+    @Test
+    void should_an_account_with_balance_10_have_balance_of_30_when_deposit_an_amount_of_20() {
+        Balance balance = new Balance(BigDecimal.TEN);
+        Account account = new Account(balance);
+        Amount amount = new Amount(BigDecimal.valueOf(20));
+        account.deposit(amount);
+        Balance expectedBalance = new Balance(BigDecimal.valueOf(30));
+        Assertions.assertEquals(expectedBalance, account.getBalance());
+    }
+
+    @Test
+    void making_a_deposit_of_negative_amount_should_be_invalid() {
+        Balance balance = new Balance(BigDecimal.ZERO);
+        Account account = new Account(balance);
+
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            Amount amount = new Amount(BigDecimal.valueOf(-10));
+            account.deposit(amount);
+        });
+    }
 }

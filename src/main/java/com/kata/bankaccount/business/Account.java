@@ -13,6 +13,6 @@ public class Account {
     }
 
     public void deposit(Amount amount) {
-        //TODO("Not yet implemented")
+        balance = balance.add(amount);
     }
 }
