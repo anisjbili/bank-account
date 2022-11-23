@@ -1,5 +1,7 @@
 package com.kata.bankaccount.business;
 
+import com.kata.bankaccount.exceptions.InsufficientFundsException;
+
 import java.math.BigDecimal;
 import java.util.Objects;
 
@@ -20,6 +22,9 @@ public final class Balance {
     }
 
     public Balance subtract(Amount amount) {
+        if (value.compareTo(amount.getValue()) < 0) {
+            throw new InsufficientFundsException("Balance is insufficient to make this debit");
+        }
         return new Balance(value.subtract(amount.getValue()));
     }
 
