@@ -1,5 +1,7 @@
 package com.kata.bankaccount.business;
 
+import com.kata.bankaccount.infrastructure.StatementPrinter;
+
 public class Account {
 
     private Balance balance;
@@ -19,4 +21,9 @@ public class Account {
     public void withdrawal(Amount amount) {
         balance = balance.subtract(amount);
     }
+
+    public void print(StatementPrinter statementPrinter) {
+        //TODO("Not implemented yet")
+    }
+
 }

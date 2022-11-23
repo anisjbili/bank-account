@@ -4,10 +4,13 @@ import com.kata.bankaccount.business.Account;
 import com.kata.bankaccount.business.Amount;
 import com.kata.bankaccount.business.Balance;
 import com.kata.bankaccount.exceptions.InsufficientFundsException;
+import com.kata.bankaccount.infrastructure.StatementPrinter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AccountTests {
 
@@ -60,5 +63,37 @@ public class AccountTests {
         Assertions.assertThrows(InsufficientFundsException.class, () -> {
             account.withdrawal(amount);
         });
+    }
+
+    @Test
+    void should_an_account_with_balance_0_have_balance_of_10_when_deposit_amount_of_20_and_withdrawal_an_amount_of_10() {
+        Balance balance = new Balance(BigDecimal.TEN);
+        Account account = new Account(balance);
+        Amount amount = new Amount(BigDecimal.TEN);
+        account.withdrawal(amount);
+        Balance expectedBalance = new Balance(BigDecimal.ZERO);
+        Assertions.assertEquals(expectedBalance, account.getBalance());
+    }
+
+    @Test
+    void making_a_deposit_and_printing_statement() {
+        Balance balance = new Balance(BigDecimal.valueOf(25));
+        Account account = new Account(balance);
+        Amount amount = new Amount(BigDecimal.valueOf(35));
+        account.deposit(amount);
+        FakeStatementPrinter statementPrinter=new FakeStatementPrinter();
+        account.print(statementPrinter);
+        Assertions.assertTrue(statementPrinter.lines.contains("Test"));
+
+    }
+
+    private static class FakeStatementPrinter implements StatementPrinter {
+
+        private final List<String> lines = new ArrayList<>();
+
+        @Override
+        public void print() {
+            lines.add("Test");
+        }
     }
 }
