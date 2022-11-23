@@ -1,5 +1,7 @@
 package com.kata.bankaccount.infrastructure;
 
+import com.kata.bankaccount.business.Statement;
+
 public interface StatementPrinter {
-    void print();
+    void print(Statement statement);
 }

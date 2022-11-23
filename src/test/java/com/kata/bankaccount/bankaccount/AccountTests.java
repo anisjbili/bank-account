@@ -1,18 +1,22 @@
 package com.kata.bankaccount.bankaccount;
 
-import com.kata.bankaccount.business.Account;
-import com.kata.bankaccount.business.Amount;
-import com.kata.bankaccount.business.Balance;
+import com.kata.bankaccount.business.*;
 import com.kata.bankaccount.exceptions.InsufficientFundsException;
 import com.kata.bankaccount.infrastructure.StatementPrinter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.time.Clock;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
 public class AccountTests {
+
+    private final static Clock fixedClock = Clock.fixed(Instant.now(), ZoneId.systemDefault());
 
     @Test
     void should_new_account_have_balance_of_10_when_deposit_an_amount_of_10() {
@@ -77,23 +81,24 @@ public class AccountTests {
 
     @Test
     void making_a_deposit_and_printing_statement() {
-        Balance balance = new Balance(BigDecimal.valueOf(25));
-        Account account = new Account(balance);
-        Amount amount = new Amount(BigDecimal.valueOf(35));
+        Balance balance = new Balance(BigDecimal.ZERO);
+        Account account = new Account(balance, fixedClock);
+        Amount amount = new Amount(BigDecimal.TEN);
         account.deposit(amount);
+        Balance expectedBalance = new Balance(BigDecimal.TEN);
+
         FakeStatementPrinter statementPrinter=new FakeStatementPrinter();
         account.print(statementPrinter);
-        Assertions.assertTrue(statementPrinter.lines.contains("Test"));
-
+        Assertions.assertTrue(statementPrinter.lines.contains(new StatementLine(new Operation(OperationType.DEPOSIT, amount, LocalDateTime.now(fixedClock)), expectedBalance)));
     }
 
     private static class FakeStatementPrinter implements StatementPrinter {
 
-        private final List<String> lines = new ArrayList<>();
+        private final List<StatementLine> lines = new ArrayList<>();
 
         @Override
-        public void print() {
-            lines.add("Test");
+        public void print(Statement statement) {
+            lines.addAll(statement.statementLines());
         }
     }
 }
