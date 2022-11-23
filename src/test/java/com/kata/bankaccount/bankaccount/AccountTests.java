@@ -40,4 +40,14 @@ public class AccountTests {
             account.deposit(amount);
         });
     }
+
+    @Test
+    void should_an_account_with_balance_10_have_balance_of_0_when_withdrawal_an_amount_of_10() {
+        Balance balance = new Balance(BigDecimal.TEN);
+        Account account = new Account(balance);
+        Amount amount = new Amount(BigDecimal.TEN);
+        account.withdrawal(amount);
+        Balance expectedBalance = new Balance(BigDecimal.ZERO);
+        Assertions.assertEquals(expectedBalance, account.getBalance());
+    }
 }
