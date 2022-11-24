@@ -8,10 +8,6 @@ import java.util.List;
 public final class Statement {
     private List<StatementLine> statementLines = new ArrayList<>();
 
-    public void print(StatementPrinter statementPrinter) {
-        statementPrinter.print(this);
-    }
-
     public List<StatementLine> statementLines() {
         return statementLines;
     }

@@ -80,16 +80,26 @@ public class AccountTests {
     }
 
     @Test
-    void making_a_deposit_and_printing_statement() {
+    void making_a_deposit_and_withdrawal_and_printing_statement() {
         Balance balance = new Balance(BigDecimal.ZERO);
         Account account = new Account(balance, fixedClock);
-        Amount amount = new Amount(BigDecimal.TEN);
-        account.deposit(amount);
-        Balance expectedBalance = new Balance(BigDecimal.TEN);
+        // Make a deposit
+        Amount amountDeposit = new Amount(BigDecimal.valueOf(20));
+        account.deposit(amountDeposit);
+
+        // Make a withdrawal
+        Amount amountWithdrawal = new Amount(BigDecimal.valueOf(10));
+        account.withdrawal(amountWithdrawal);
+
+        List<StatementLine> statementLineList = new ArrayList<>();
+        StatementLine statementLine = new StatementLine(new Operation(OperationType.DEPOSIT, amountDeposit, LocalDateTime.now(fixedClock)), new Balance(BigDecimal.valueOf(20)));
+        statementLineList.add(statementLine);
+        statementLine = new StatementLine(new Operation(OperationType.WITHDRAWAL, amountWithdrawal, LocalDateTime.now(fixedClock)), new Balance(BigDecimal.TEN));
+        statementLineList.add(statementLine);
 
         FakeStatementPrinter statementPrinter=new FakeStatementPrinter();
         account.print(statementPrinter);
-        Assertions.assertTrue(statementPrinter.lines.contains(new StatementLine(new Operation(OperationType.DEPOSIT, amount, LocalDateTime.now(fixedClock)), expectedBalance)));
+        Assertions.assertTrue(statementPrinter.lines.equals(statementLineList));
     }
 
     private static class FakeStatementPrinter implements StatementPrinter {
